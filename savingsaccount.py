@@ -8,7 +8,7 @@ class SavingsAccount(object):
     
     RATE = 0.02
 
-    def __ini__(self, name, pin, balance = 0.0):
+    def __init__(self, name, pin, balance = 0.0):
         self.name = name
         self.pin = pin
         self.balance = balance
@@ -34,6 +34,22 @@ class SavingsAccount(object):
         """Withdraw the fiven amount"""
         if amount < 0:
             return "The amount must be >= 0"
+        elif self.balance < amount:
+            return "Insufficient funds"
         else:
-            pass
+            self.balance -= amount
+            return str(amount) + "is withdrawn"
+
+    def computeInterest(self):
+        """Computes, deposits, and returns the interest."""
+        interest = self.balance * SavingsAccount.RATE
+        self.deposit(interest)
+        return interest
+
+    def __str__(self):
+        """Returns the string rep."""
+        result = 'Name: ' + self.name + '\n'
+        result += 'PIN: ' + self.pin + '\n'
+        result += 'Balance: ' + str(self.balance)
+        return result
 
