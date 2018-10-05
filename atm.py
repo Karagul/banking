@@ -150,10 +150,3 @@ class ATM(EasyFrame):
                 return fyle
         else:
             return None
-
-def main():
-    atm = ATM()
-    atm.mainloop()
-
-if __name__ == "__main__":
-    main()
