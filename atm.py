@@ -18,28 +18,42 @@ class ATM(EasyFrame):
         self.bank = bank
         self.account = None
         # Create and add the widgets to the window.
-        self.addLabel(text = "Name", row = 0, column = 0)
-        self.addLabel(text = "PIN", row = 1, column = 0)
-        self.addLabel(text = "Amount", row = 2, column = 0)
-        self.addLabel(text = "Status", row = 3, column = 0)
-        self.nameField = self.addTextField(text = "", row = 0, column = 1, width = 40)
-        self.pinField = self.addTextField(text = "", row = 1, column = 1, width = 40)
+
+        # Atm part for exisiting accounts
+        atmPanel = self.addPanel(row = 0, column = 0)
+
+        atmPanel.addLabel(text = "Name", row = 0, column = 0)
+        atmPanel.addLabel(text = "PIN", row = 1, column = 0)
+        atmPanel.addLabel(text = "Amount", row = 2, column = 0)
+        atmPanel.addLabel(text = "Status", row = 3, column = 0)
+        self.nameField = atmPanel.addTextField(text = "", row = 0, column = 1, width = 40)
+        self.pinField = atmPanel.addTextField(text = "", row = 1, column = 1, width = 40)
         self.pinField.bind("<Return>", lambda event: self.login())
-        self.amountField = self.addFloatField(value = 0.0, row = 2, column = 1, state = "disabled",
+        self.amountField = atmPanel.addFloatField(value = 0.0, row = 2, column = 1, state = "disabled",
                                             width = 40)
-        self.statusField = self.addTextField(text = "Enter your name and PIN to login", row = 3, column = 1,
+        self.statusField = atmPanel.addTextField(text = "Enter your name and PIN to login", row = 3, column = 1,
                                             state = "readonly", width = 40)
-        self.balanceButton = self.addButton(text = "Balance", row = 0, column = 2, state = "disabled",
+        self.balanceButton = atmPanel.addButton(text = "Balance", row = 0, column = 2, state = "disabled",
                                             command = self.getBalance)
-        self.depositButton = self.addButton(text = "Deposit", row = 1, column = 2,
+        self.depositButton = atmPanel.addButton(text = "Deposit", row = 1, column = 2,
                                             state = "disabled", command = self.deposit)
-        self.withdrawButton = self.addButton(text = "Withdraw", row = 2, column = 2,
+        self.withdrawButton = atmPanel.addButton(text = "Withdraw", row = 2, column = 2,
                                             state = "disabled", command = self.withdraw)
-        self.loginButton = self.addButton(text = "Login", row = 3, column = 2,
+        self.loginButton = atmPanel.addButton(text = "Login", row = 3, column = 2,
                                         command = self.login)
-        self.fastLoginButton = self.addButton(text = "Fast login", row = 4, column = 0, 
+        self.fastLoginButton = atmPanel.addButton(text = "Fast login", row = 4, column = 0, 
                                             columnspan = 4, command = self.fastLogin)
-    
+
+        # Promotion part for newcomers
+        bgColor = "gray"
+        accountPanel = self.addPanel(row = 1, column = 0, background = bgColor)
+
+        accountPanel.addLabel(text = "", row = 0, column = 0, background = bgColor)
+        accountPanel.addLabel(text = "Don't have an account?", row = 1, column = 0, 
+                                sticky = "NSEW", background = bgColor, foreground = "white")
+        accountPanel.addButton(text = "Create one!", row = 2, column = 0)
+        accountPanel.addLabel(text = "", row = 3, column = 0, background = bgColor)
+
     def fastLogin(self):
         # Only for testing
         self.nameField.setText("Account 1")
