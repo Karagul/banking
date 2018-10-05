@@ -11,7 +11,6 @@ class ATM(EasyFrame):
     The window tracks the bank and the current account.
     The current account is None at startup and logout.
     """
-
     def __init__(self, bank):
         """Initialize the window and establish
         the data model."""
