@@ -38,7 +38,7 @@ class SavingsAccount(object):
             return "Insufficient funds"
         else:
             self.balance -= amount
-            return str(amount) + "is withdrawn"
+            return str(amount) + " i succesfully withdrawn"
 
     def computeInterest(self):
         """Computes, deposits, and returns the interest."""
@@ -50,6 +50,6 @@ class SavingsAccount(object):
         """Returns the string rep."""
         result = 'Name: ' + self.name + '\n'
         result += 'PIN: ' + self.pin + '\n'
-        result += 'Balance: ' + str(self.balance)
+        result += 'Balance: ' + str(self.balance) + "\n"
         return result
 

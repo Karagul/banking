@@ -4,11 +4,25 @@
     Author: Pavel Paranin""" 
 
 from savingsaccount import SavingsAccount
+import pickle
 
 class Bank(object):
 
-    def __init__(self):
+    def __init__(self, fileName = None):
+        """Creates a new dictionary to hold the accounts.
+        If a filename is provided, loads the accounts from
+        a file of pickled accounts."""
         self.accounts = {}
+        self.fileName = fileName
+        if fileName != None:
+            fileObj = open(fileName, "rb")
+            while True:
+                try:
+                    account = pickle.load(fileObj)
+                    self.add(account)
+                except EOFError:
+                    fileObj.close()
+                    break
 
     def makeKey(self, name, pin):
         """Makes and returns a key from name and pin."""
@@ -42,8 +56,6 @@ class Bank(object):
         """Return the string rep of the entire bank."""
         return '\n'.join(map(str, self.accounts.values()))
 
-    import pickle
-
     def save(self, fileName = None):
         """Saves pickled accounts to a file. The parameter
         allows the user to change filenames."""
@@ -51,10 +63,22 @@ class Bank(object):
             self.fileName = fileName
         elif self.fileName == None:
             return
-        fileObj = open(self. fileName, "wb")
+        fileObj = open(self.fileName, "wb")
         for account in self.accounts.values():
-            account.dump()
+            pickle.dump(account, fileObj)
         fileObj.close()
+
+def createBank(number = None):
+    import random
+    bank = Bank()
+    if number > 0:
+        for i in range(number):
+            bank.add(SavingsAccount("Account " + str(i), 
+                    ''.join([str(random.randint(1, 9)) for _ in range(4)]),
+                    balance = random.randint(1, 10) * 1000))
+        return bank
+    else:
+        return None
 
 
     
