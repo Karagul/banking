@@ -11,11 +11,11 @@ class ATM(EasyFrame):
     The window tracks the bank and the current account.
     The current account is None at startup and logout.
     """
-    def __init__(self, bank):
+    def __init__(self):
         """Initialize the window and establish
         the data model."""
         EasyFrame.__init__(self, title = "ATM")
-        self.bank = bank
+        self.bank = self.getBank()
         self.account = None
         # Create and add the widgets to the window.
 
@@ -51,7 +51,7 @@ class ATM(EasyFrame):
         accountPanel.addLabel(text = "", row = 0, column = 0, background = bgColor)
         accountPanel.addLabel(text = "Don't have an account?", row = 1, column = 0, 
                                 sticky = "NSEW", background = bgColor, foreground = "white")
-        accountPanel.addButton(text = "Create one!", row = 2, column = 0)
+        accountPanel.addButton(text = "Create one!", row = 2, column = 0, command = self.createAccount)
         accountPanel.addLabel(text = "", row = 3, column = 0, background = bgColor)
 
     def fastLogin(self):
@@ -118,11 +118,41 @@ class ATM(EasyFrame):
         self.loginButton["text"] = "Login"
         self.loginButton["command"] = self.login
 
+    def createAccount(self):
+        userName = self.prompterBox(title = "Create new account", promptString = "Enter your name and surname")
+        if userName:
+            if userName in ''.join(self.bank.accounts.keys()):
+                self.messageBox(title = "Existing user", message = "Such account already exists")
+            else:
+                from bank import generatePIN
+                from savingsaccount import SavingsAccount
+                PIN = generatePIN()
+                account = SavingsAccount(userName, PIN)
+                self.bank.add(account)
+                self.bank.save()
+                message = "This is your PIN Code.\nNever show it to anybody\n\n" + PIN
+                self.messageBox(title = "PIN Code", message = message)
+
+    def getBank(self):
+        fyle = self.findBankFile()
+        if fyle != None:
+            return Bank(fyle)
+        else:
+            bank = createBank(10)
+            bank.save("Local__SavedBank")
+            return bank
+
+    def findBankFile(self):
+        import os
+        files = os.listdir(os.getcwd())
+        for fyle in files:
+            if "__SavedBank" in fyle:
+                return fyle
+        else:
+            return None
 
 def main():
-    bank = createBank(5)
-    print(bank)
-    atm = ATM(bank)
+    atm = ATM()
     atm.mainloop()
 
 if __name__ == "__main__":

@@ -14,8 +14,8 @@ class Bank(object):
         a file of pickled accounts."""
         self.accounts = {}
         self.fileName = fileName
-        if fileName != None:
-            fileObj = open(fileName, "rb")
+        if self.fileName != None:
+            fileObj = open(self.fileName, "rb")
             while True:
                 try:
                     account = pickle.load(fileObj)
@@ -63,10 +63,16 @@ class Bank(object):
             self.fileName = fileName
         elif self.fileName == None:
             return
-        fileObj = open(self.fileName, "wb")
+        fileObj = open(self. fileName, "wb")
         for account in self.accounts.values():
             pickle.dump(account, fileObj)
         fileObj.close()
+
+    def load(self):
+        """Loads pickled accounts to an object."""
+        with open(self.fileName, "rb") as fileObj:
+            data = pickle.load(fileObj)
+        return data
 
 def createBank(number = None):
     import random
@@ -74,11 +80,16 @@ def createBank(number = None):
     if number > 0:
         for i in range(number):
             bank.add(SavingsAccount("Account " + str(i), 
-                    ''.join([str(random.randint(1, 9)) for _ in range(4)]),
+                    generatePIN(),
                     balance = random.randint(1, 10) * 1000))
         return bank
     else:
         return None
+
+def generatePIN():
+    import random
+    """Generates random pincode"""
+    return ''.join([str(random.randint(1, 9)) for _ in range(4)])
 
 
     
